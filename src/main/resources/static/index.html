@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>FoodShare</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     NAVIGATION BAR
+===================================================== -->
+
+<header class="navbar">
+
+    <div class="logo">
+        🍲 FoodShare
+    </div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#listings">Food Listings</a>
+        <a href="#donate">Donate Food</a>
+        <a href="#dashboard">Dashboard</a>
+    </nav>
+
+</header>
+
+
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<section id="home" class="hero">
+
+    <div class="hero-content">
+
+        <h1>Share Food.<br>Reduce Waste.</h1>
+
+        <p>
+            FoodShare connects food donors with NGOs
+            to make surplus food available to people
+            who need it.
+        </p>
+
+        <div class="hero-buttons">
+
+            <button onclick="showSection('donate')">
+                Donate Food
+            </button>
+
+            <button
+                    class="secondary-btn"
+                    onclick="showSection('listings')">
+                Find Food
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<section class="stats">
+
+    <div class="stat-card">
+        <h2 id="totalListings">0</h2>
+        <p>Food Listings</p>
+    </div>
+
+    <div class="stat-card">
+        <h2 id="totalClaims">0</h2>
+        <p>Claims</p>
+    </div>
+
+    <div class="stat-card">
+        <h2 id="collectedClaims">0</h2>
+        <p>Collected</p>
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOD LISTINGS
+===================================================== -->
+
+<section id="listings" class="section">
+
+    <div class="section-heading">
+
+        <div>
+            <p class="section-label">AVAILABLE FOOD</p>
+
+            <h2>Food Listings</h2>
+
+            <p>
+                Browse available surplus food and claim
+                it for your NGO.
+            </p>
+        </div>
+
+        <button onclick="loadFoodListings()">
+            Refresh
+        </button>
+
+    </div>
+
+
+    <div id="listingContainer" class="listing-grid">
+
+        <!-- JavaScript will add listings here -->
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     DONATE FOOD
+===================================================== -->
+
+<section id="donate" class="section donate-section">
+
+    <div class="section-heading">
+
+        <div>
+            <p class="section-label">DONATE</p>
+
+            <h2>Create Food Listing</h2>
+
+            <p>
+                Share surplus food with NGOs in your area.
+            </p>
+        </div>
+
+    </div>
+
+
+    <form id="foodForm" class="form-card">
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label>Food Name</label>
+
+                <input
+                        type="text"
+                        id="foodName"
+                        placeholder="Example: Cooked Rice"
+                        required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Food Type</label>
+
+                <input
+                        type="text"
+                        id="foodType"
+                        placeholder="Example: Vegetarian"
+                        required>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label>Quantity</label>
+
+                <input
+                        type="number"
+                        id="quantity"
+                        step="0.01"
+                        min="0.01"
+                        required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Unit</label>
+
+                <select id="unit" required>
+
+                    <option value="">
+                        Select unit
+                    </option>
+
+                    <option value="KG">
+                        KG
+                    </option>
+
+                    <option value="LITRE">
+                        Litre
+                    </option>
+
+                    <option value="PACKET">
+                        Packet
+                    </option>
+
+                    <option value="PIECE">
+                        Piece
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label>Safe Until</label>
+
+                <input
+                        type="datetime-local"
+                        id="safeUntil"
+                        required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Pickup Location</label>
+
+                <input
+                        type="text"
+                        id="pickupLocation"
+                        placeholder="Enter pickup location"
+                        required>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Donor ID</label>
+
+            <input
+                    type="number"
+                    id="donorId"
+                    placeholder="Enter your donor ID"
+                    required>
+
+        </div>
+
+
+        <button type="submit" class="submit-btn">
+            Create Food Listing
+        </button>
+
+        <p id="formMessage" class="form-message"></p>
+
+    </form>
+
+</section>
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section id="dashboard" class="section">
+
+    <div class="section-heading">
+
+        <div>
+
+            <p class="section-label">OVERVIEW</p>
+
+            <h2>FoodShare Dashboard</h2>
+
+            <p>
+                View food collection statistics.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-cards">
+
+        <div class="dashboard-card">
+
+            <span>Available Listings</span>
+
+            <strong id="dashboardListings">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <span>Total Claims</span>
+
+            <strong id="dashboardClaims">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <span>Collected Food</span>
+
+            <strong id="dashboardCollected">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="monthly-card">
+
+        <h3>Monthly Summary</h3>
+
+        <div id="monthlySummary">
+
+            <p>
+                Enter a month to view the summary.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div class="footer-logo">
+        🍲 FoodShare
+    </div>
+
+    <p>
+        Connecting surplus food with communities in need.
+    </p>
+
+    <p class="copyright">
+        © 2026 FoodShare
+    </p>
+
+</footer>
+
+
+<script src="js/app.js"></script>
+
+</body>
+
+</html>
