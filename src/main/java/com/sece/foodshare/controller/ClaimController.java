@@ -1,11 +1,10 @@
 package com.sece.foodshare.controller;
 
-import com.sece.foodshare.dto.request.ClaimRequest;
-import com.sece.foodshare.dto.response.ClaimResponse;
+import com.sece.foodshare.dto.ClaimRequest;
+import com.sece.foodshare.dto.ClaimResponse;
 import com.sece.foodshare.service.ClaimService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,53 +13,55 @@ import java.util.List;
 @RequestMapping("/api/claims")
 public class ClaimController {
 
-    private final ClaimService claimService;
+    private final ClaimService service;
 
-    public ClaimController(ClaimService claimService) {
-        this.claimService = claimService;
+    public ClaimController(
+            ClaimService service) {
+
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<ClaimResponse> createClaim(
-            @Valid @RequestBody ClaimRequest request) {
+    public ClaimResponse create(
+            @Valid @RequestBody ClaimRequest request,
+            HttpSession session) {
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(claimService.createClaim(request));
+        return service.create(
+                request,
+                session
+        );
     }
 
-    @PutMapping("/{id}/collect")
-    public ResponseEntity<ClaimResponse> collect(
-            @PathVariable Long id) {
+    @GetMapping("/mine")
+    public List<ClaimResponse> mine(
+            HttpSession session) {
 
-        return ResponseEntity.ok(
-                claimService.collectClaim(id)
+        return service.myClaims(session);
+    }
+
+    @GetMapping("/my-listings")
+    public List<ClaimResponse> myListings(
+            HttpSession session) {
+
+        return service.claimsForMyListings(
+                session
         );
     }
 
     @GetMapping
-    public ResponseEntity<List<ClaimResponse>> getAll() {
+    public List<ClaimResponse> all() {
 
-        return ResponseEntity.ok(
-                claimService.getAll()
-        );
+        return service.all();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClaimResponse> getById(
-            @PathVariable Long id) {
+    @PutMapping("/{id}/collect")
+    public ClaimResponse collect(
+            @PathVariable Long id,
+            HttpSession session) {
 
-        return ResponseEntity.ok(
-                claimService.getById(id)
-        );
-    }
-
-    @GetMapping("/ngo/{ngoId}")
-    public ResponseEntity<List<ClaimResponse>> getByNgo(
-            @PathVariable Long ngoId) {
-
-        return ResponseEntity.ok(
-                claimService.getByNgo(ngoId)
+        return service.collect(
+                id,
+                session
         );
     }
 }
